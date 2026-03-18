@@ -7,10 +7,9 @@ import { CartComponent } from './pages/cart/cart.component';
 import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
-
-  //add routes to pages components
-  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'cart', component: CartComponent },
   { path: 'product', component: ProductComponent },
   { path: 'wishlist', component: WishlistComponent }

@@ -8,6 +8,7 @@ import { ProductComponent } from './modules/cart-module/product/product.componen
 import { WishlistComponent } from './modules/cart-module/wishlist/wishlist.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './modules/authentication-module/register/register.component';
 
 @NgModule({
   declarations: [
@@ -16,11 +17,12 @@ import { LoginComponent } from './pages/login/login.component';
     ProductComponent,
     WishlistComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
