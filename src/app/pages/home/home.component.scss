@@ -1,0 +1,85 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.home-page {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 214, 165, 0.75), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(187, 222, 251, 0.8), transparent 32%),
+    linear-gradient(135deg, #fff9f1 0%, #eef6ff 100%);
+}
+
+.home-shell {
+  max-width: 1040px;
+  margin: 0 auto;
+  min-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+}
+
+.hero h1 {
+  margin: 0 0 16px;
+  max-width: 12ch;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+  color: #13293d;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #d35400;
+}
+
+.subtitle {
+  max-width: 42rem;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #32506b;
+}
+
+.actions {
+  display: flex;
+}
+
+.logout-button {
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: #13293d;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 16px 36px rgba(19, 41, 61, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 40px rgba(19, 41, 61, 0.24);
+}
+
+@media (max-width: 640px) {
+  .home-page {
+    padding: 16px;
+  }
+
+  .home-shell {
+    min-height: calc(100vh - 32px);
+  }
+
+  .logout-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
