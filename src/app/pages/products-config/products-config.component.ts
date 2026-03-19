@@ -76,21 +76,22 @@ export class ProductsConfigComponent implements OnInit {
     this.isDialogVisible = true;
   }
 
-  openEditDialog(): void {
-    if (!this.selectedProduct) {
+  openEditDialog(product: ProductResponse = this.selectedProduct as ProductResponse): void {
+    if (!product) {
       return;
     }
 
+    this.selectedProduct = product;
     this.dialogMode = 'edit';
     this.dialogError = '';
-    this.selectedImageName = this.selectedProduct.imageFileName || '';
+    this.selectedImageName = product.imageFileName || '';
     this.productForm.reset({
-      code: this.selectedProduct.code,
-      name: this.selectedProduct.name,
+      code: product.code,
+      name: product.name,
       imageFile: null,
-      category: this.selectedProduct.category,
-      price: this.selectedProduct.price,
-      internalReference: this.selectedProduct.internalReference
+      category: product.category,
+      price: product.price,
+      internalReference: product.internalReference
     });
     this.productForm.controls.imageFile.setErrors({ required: true });
     this.isDialogVisible = true;
@@ -145,20 +146,21 @@ export class ProductsConfigComponent implements OnInit {
     });
   }
 
-  deleteSelectedProduct(): void {
-    if (!this.selectedProduct) {
+  deleteProduct(product: ProductResponse = this.selectedProduct as ProductResponse): void {
+    if (!product) {
       return;
     }
 
-    const confirmed = window.confirm(`Supprimer le produit "${this.selectedProduct.name}" ?`);
+    const confirmed = window.confirm(`Supprimer le produit "${product.name}" ?`);
     if (!confirmed) {
       return;
     }
 
+    this.selectedProduct = this.selectedProduct?.id === product.id ? this.selectedProduct : product;
     this.pageError = '';
     this.isLoading = true;
 
-    this.productService.delete(this.selectedProduct.id).pipe(
+    this.productService.delete(product.id).pipe(
       finalize(() => {
         this.isLoading = false;
       })

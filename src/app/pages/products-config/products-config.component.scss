@@ -113,7 +113,8 @@
 
 .product-card {
   min-height: 128px;
-  padding: 24px 20px;
+  position: relative;
+  padding: 44px 20px 24px;
   border-radius: 22px;
   display: flex;
   align-items: center;
@@ -139,6 +140,53 @@
   width: 100%;
   display: grid;
   gap: 6px;
+}
+
+.product-card-actions {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-action-button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 18px rgba(41, 52, 72, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-action-button svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card-action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px rgba(41, 52, 72, 0.18);
+}
+
+.card-action-button--edit {
+  color: #111111;
+}
+
+.card-action-button--delete {
+  color: #c81e1e;
 }
 
 .product-image-shell {
@@ -355,6 +403,7 @@
   }
 
   .product-card {
+    padding-top: 52px;
     align-items: flex-start;
   }
 
