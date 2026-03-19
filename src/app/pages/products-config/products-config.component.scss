@@ -1,0 +1,169 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.products-config-page {
+  min-height: 100vh;
+  padding: 18px 22px 48px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 245, 224, 0.75), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(217, 228, 255, 0.85), transparent 34%),
+    linear-gradient(180deg, #f7f3ee 0%, #eef2f6 100%);
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 78px;
+}
+
+.toolbar-actions,
+.topbar-pills {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.icon-button,
+.pill-button,
+.product-card {
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 24px rgba(41, 52, 72, 0.12);
+}
+
+.icon-button {
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c4058;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.icon-button svg,
+.plus-circle svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pill-button {
+  min-height: 58px;
+  padding: 0 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #25364c;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pill-button--solid {
+  background: #25364c;
+  color: #ffffff;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 34px 46px;
+  align-items: start;
+}
+
+.product-card {
+  min-height: 112px;
+  padding: 24px 20px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #23354a;
+}
+
+.product-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.product-card--create {
+  justify-content: flex-start;
+  color: #8a96a5;
+}
+
+.create-card-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.plus-circle {
+  width: 32px;
+  height: 32px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button:hover,
+.pill-button:hover,
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(41, 52, 72, 0.16);
+}
+
+@media (max-width: 960px) {
+  .topbar {
+    flex-direction: column;
+    margin-bottom: 46px;
+  }
+}
+
+@media (max-width: 640px) {
+  .products-config-page {
+    padding: 16px 16px 32px;
+  }
+
+  .toolbar-actions,
+  .topbar-pills {
+    gap: 12px;
+  }
+
+  .icon-button {
+    width: 52px;
+    height: 52px;
+  }
+
+  .pill-button {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+  }
+
+  .cards-grid {
+    gap: 22px;
+  }
+}
