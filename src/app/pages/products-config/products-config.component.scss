@@ -249,7 +249,9 @@
 }
 
 .field {
-  display: grid;
+  display: flex;
+  align-items: center;
+  flex: 1; ;
   gap: 8px;
   color: #213448;
   font-weight: 600;
