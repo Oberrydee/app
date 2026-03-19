@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CartComponent } from './modules/cart-module/cart/cart.component';
+import { AuthTokenInterceptor } from './modules/authentication-module/authentication/auth-token.interceptor';
 import { ProductComponent } from './modules/cart-module/product/product.component';
-import { WishlistComponent } from './modules/cart-module/wishlist/wishlist.component';
+import { RegisterComponent } from './modules/authentication-module/register/register.component';
+import { CartComponent } from './pages/cart/cart.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './modules/authentication-module/register/register.component';
+import { WishlistComponent } from './pages/wishlist/wishlist.component';
 
 @NgModule({
   declarations: [
@@ -22,9 +25,17 @@ import { RegisterComponent } from './modules/authentication-module/register/regi
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthTokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

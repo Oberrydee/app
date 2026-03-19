@@ -1,1 +1,94 @@
-<p>login works!</p>
+<section class="auth-page">
+  <div class="auth-shell">
+    <div class="auth-intro">
+      <p class="eyebrow">E-COMMERCE</p>
+      <h1>Connectez-vous pour acceder a votre espace.</h1>
+      <p class="subtitle">
+        Les pages home, cart, product et wishlist sont reservees aux utilisateurs authentifies.
+      </p>
+    </div>
+
+    <div class="auth-card">
+      <div class="mode-switch" role="tablist" aria-label="Choix du formulaire d'authentification">
+        <button
+          type="button"
+          class="mode-button"
+          [class.active]="mode === 'login'"
+          (click)="setMode('login')">
+          Se connecter
+        </button>
+        <button
+          type="button"
+          class="mode-button"
+          [class.active]="mode === 'register'"
+          (click)="setMode('register')">
+          Creer un compte
+        </button>
+      </div>
+
+      <p *ngIf="successMessage" class="feedback success">{{ successMessage }}</p>
+      <p *ngIf="errorMessage" class="feedback error">{{ errorMessage }}</p>
+
+      <form
+        *ngIf="mode === 'login'"
+        class="auth-form"
+        [formGroup]="loginForm"
+        (ngSubmit)="submit()">
+        <label class="field">
+          <span>Email</span>
+          <input type="email" formControlName="email" placeholder="vous@example.com">
+          <small *ngIf="hasError('login', 'email', 'required')">L'email est requis.</small>
+          <small *ngIf="hasError('login', 'email', 'email')">Saisissez un email valide.</small>
+        </label>
+
+        <label class="field">
+          <span>Mot de passe</span>
+          <input type="password" formControlName="password" placeholder="Votre mot de passe">
+          <small *ngIf="hasError('login', 'password', 'required')">Le mot de passe est requis.</small>
+        </label>
+
+        <button type="submit" class="submit-button" [disabled]="loading">
+          {{ loading ? 'Connexion...' : 'Se connecter' }}
+        </button>
+      </form>
+
+      <form
+        *ngIf="mode === 'register'"
+        class="auth-form"
+        [formGroup]="registerForm"
+        (ngSubmit)="submit()">
+        <label class="field">
+          <span>Prenom</span>
+          <input type="text" formControlName="firstName" placeholder="Jane">
+          <small *ngIf="hasError('register', 'firstName', 'required')">Le prenom est requis.</small>
+        </label>
+
+        <label class="field">
+          <span>Nom</span>
+          <input type="text" formControlName="lastName" placeholder="Doe">
+          <small *ngIf="hasError('register', 'lastName', 'required')">Le nom est requis.</small>
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" formControlName="email" placeholder="vous@example.com">
+          <small *ngIf="hasError('register', 'email', 'required')">L'email est requis.</small>
+          <small *ngIf="hasError('register', 'email', 'email')">Saisissez un email valide.</small>
+        </label>
+
+        <label class="field">
+          <span>Mot de passe</span>
+          <input type="password" formControlName="password" placeholder="6 caracteres minimum">
+          <small *ngIf="hasError('register', 'password', 'required')">Le mot de passe est requis.</small>
+          <small *ngIf="hasError('register', 'password', 'minlength')">
+            Le mot de passe doit contenir au moins 6 caracteres.
+          </small>
+        </label>
+
+        <button type="submit" class="submit-button" [disabled]="loading">
+          {{ loading ? 'Creation...' : 'Creer un compte' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

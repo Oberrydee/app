@@ -1,34 +1,85 @@
-//class with methods to get current users, gettoken, remove token, etc
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import {
+  AuthResponse,
+  CurrentUser,
+  LoginRequest,
+  RegisterRequest
+} from 'src/app/models/auth.models';
 import { environment } from 'src/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-    private tokenKey = 'authToken';
+    private readonly tokenKey = 'authToken';
+    private readonly currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
+    readonly currentUser$ = this.currentUserSubject.asObservable();
 
-    constructor() { }
-  
-    // Method to set the token in local storage
+    constructor(private readonly http: HttpClient) {}
+
+    login(payload: LoginRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/Auth/login`, payload);
+    }
+
+    register(payload: RegisterRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${environment.apiBaseUrl}/Auth/register`, payload);
+    }
+
+    getCurrentUser(): Observable<CurrentUser> {
+        return this.http.get<CurrentUser>(`${environment.apiBaseUrl}/Auth/me`);
+    }
+
     setToken(token: string): void {
         localStorage.setItem(this.tokenKey, token);
     }
 
-    // Method to get the token from local storage
     getToken(): string | null {
         return localStorage.getItem(this.tokenKey);
     }
 
-    // Method to remove the token from local storage
     removeToken(): void {
         localStorage.removeItem(this.tokenKey);
     }
 
-    // Method to check if the user is authenticated
+    getCurrentUserValue(): CurrentUser | null {
+        return this.currentUserSubject.value;
+    }
 
     isAuthenticated(): boolean {
-        const token = this.getToken();
-        // Here you can add additional logic to check if the token is valid (e.g., check expiration)
-        return !!token; // Returns true if token exists, false otherwise
+        return !!this.getToken();
+    }
+
+    ensureSession(): Observable<boolean> {
+        if (!this.getToken()) {
+            this.currentUserSubject.next(null);
+            return of(false);
+        }
+
+        if (this.currentUserSubject.value) {
+            return of(true);
+        }
+
+        return this.getCurrentUser().pipe(
+            tap((user) => this.currentUserSubject.next(user)),
+            map(() => true),
+            catchError((error: HttpErrorResponse) => {
+                if (error.status === 401) {
+                    this.logout();
+                }
+
+                return of(false);
+            })
+        );
+    }
+
+    setCurrentUser(user: CurrentUser | null): void {
+        this.currentUserSubject.next(user);
+    }
+
+    logout(): void {
+        this.removeToken();
+        this.currentUserSubject.next(null);
     }
 }
