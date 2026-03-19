@@ -71,6 +71,20 @@
       class="product-card"
       [class.product-card--selected]="selectedProduct?.id === product.id"
       (click)="selectProduct(product)">
+      <div class="product-image-shell">
+        <img
+          *ngIf="product.image; else imageFallback"
+          class="product-image"
+          [src]="product.image"
+          [alt]="product.name">
+
+        <ng-template #imageFallback>
+          <div class="product-image-placeholder">
+            No image
+          </div>
+        </ng-template>
+      </div>
+
       <div class="product-card-content">
         <p class="product-code">{{ product.code }}</p>
         <h2>{{ product.name }}</h2>
