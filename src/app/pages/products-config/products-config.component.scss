@@ -12,11 +12,11 @@
     linear-gradient(180deg, #f7f3ee 0%, #eef2f6 100%);
 }
 
-.back-button {
-  width: fit-content;
-  min-height: 52px;
+.home-button {
+  width: 52px;
+  height: 52px;
   margin-bottom: 20px;
-  padding: 0 18px;
+  padding: 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
   color: #18293c;
@@ -24,8 +24,7 @@
   box-shadow: 0 12px 30px rgba(28, 43, 63, 0.14);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
+  justify-content: center;
 }
 
 .topbar {
@@ -50,7 +49,7 @@
   box-shadow: 0 10px 24px rgba(41, 52, 72, 0.12);
 }
 
-.back-button svg,
+.home-button svg,
 .plus-circle svg {
   width: 24px;
   height: 24px;
@@ -262,7 +261,7 @@
   justify-content: center;
 }
 
-.back-button:hover,
+.home-button:hover,
 .product-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(41, 52, 72, 0.16);
@@ -376,7 +375,7 @@
     padding: 16px 16px 32px;
   }
 
-  .back-button {
+  .home-button {
     margin-bottom: 16px;
   }
 

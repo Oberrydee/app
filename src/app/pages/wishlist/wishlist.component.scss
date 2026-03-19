@@ -12,23 +12,22 @@
     linear-gradient(180deg, #fff7f9 0%, #eef4fa 100%);
 }
 
-.back-button {
-  width: fit-content;
-  min-height: 52px;
+.home-button {
+  width: 52px;
+  height: 52px;
   margin-bottom: 20px;
-  padding: 0 18px;
+  padding: 0;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
   color: #18293c;
   text-decoration: none;
-  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   box-shadow: 0 12px 30px rgba(28, 43, 63, 0.14);
 }
 
-.back-button svg {
+.home-button svg {
   width: 20px;
   height: 20px;
   stroke: currentColor;
@@ -239,7 +238,7 @@
     padding: 16px;
   }
 
-  .back-button {
+  .home-button {
     margin-bottom: 16px;
   }
 
