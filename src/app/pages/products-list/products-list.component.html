@@ -1,1 +1,71 @@
-<p>products-list works!</p>
+<section class="products-list-page">
+  <header class="topbar">
+    <div class="hero-copy">
+      <p class="eyebrow">CATALOGUE</p>
+      <h1>Parcourez tous les produits.</h1>
+      <p class="subtitle">Ajoutez directement un article au panier depuis sa carte.</p>
+    </div>
+
+    <a class="cart-button" routerLink="/cart" aria-label="Ouvrir le panier">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="9" cy="20" r="1.75" />
+        <circle cx="18" cy="20" r="1.75" />
+        <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
+      </svg>
+      <span class="cart-button__label">Panier</span>
+      <span class="cart-button__badge">{{ cartCount$ | async }}</span>
+    </a>
+  </header>
+
+  <p *ngIf="pageError" class="feedback feedback--error">{{ pageError }}</p>
+  <p *ngIf="cartFeedback" class="feedback feedback--success">{{ cartFeedback }}</p>
+
+  <div class="state-row" *ngIf="isLoading">
+    <p class="feedback">Chargement du catalogue...</p>
+  </div>
+
+  <div class="products-grid" *ngIf="!isLoading && products.length > 0; else emptyState">
+    <article
+      *ngFor="let product of products; trackBy: trackByProductId"
+      class="product-card">
+      <button
+        type="button"
+        class="card-cart-button"
+        [disabled]="pendingProductId === product.id"
+        (click)="addToCart(product)"
+        aria-label="Ajouter au panier">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.75" />
+          <circle cx="18" cy="20" r="1.75" />
+          <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
+        </svg>
+      </button>
+
+      <div class="product-image-shell">
+        <img
+          *ngIf="product.image; else imageFallback"
+          class="product-image"
+          [src]="product.image"
+          [alt]="product.name">
+
+        <ng-template #imageFallback>
+          <div class="product-image-placeholder">No image</div>
+        </ng-template>
+      </div>
+
+      <div class="product-card-content">
+        <p class="product-code">{{ product.code }}</p>
+        <h2>{{ product.name }}</h2>
+        <p class="product-meta">{{ product.category }}</p>
+        <p class="product-price">{{ product.price | number:'1.2-2' }} EUR</p>
+        <p class="product-meta">Ref: {{ product.internalReference }}</p>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state-shell" *ngIf="!isLoading">
+      <p class="empty-state">Aucun produit disponible pour le moment.</p>
+    </div>
+  </ng-template>
+</section>
