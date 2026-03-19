@@ -12,6 +12,22 @@
     linear-gradient(180deg, #fff8f1 0%, #eff4fa 100%);
 }
 
+.back-button {
+  width: fit-content;
+  min-height: 52px;
+  margin-bottom: 20px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #18293c;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(28, 43, 63, 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
 .topbar {
   display: flex;
   align-items: flex-start;
@@ -64,6 +80,7 @@
 }
 
 .cart-button svg,
+.back-button svg,
 .card-cart-button svg {
   width: 20px;
   height: 20px;
@@ -234,6 +251,10 @@
 @media (max-width: 720px) {
   .products-list-page {
     padding: 16px;
+  }
+
+  .back-button {
+    margin-bottom: 16px;
   }
 
   .topbar {

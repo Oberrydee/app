@@ -1,12 +1,18 @@
 <section class="cart-page">
+  <a class="back-button" routerLink="/products-list" aria-label="Retour au catalogue">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 5L8 12L15 19" />
+      <path d="M9 12H21" />
+    </svg>
+    <span>Retour</span>
+  </a>
+
   <header class="topbar">
     <div>
       <p class="eyebrow">PANIER</p>
       <h1>Votre panier utilisateur.</h1>
       <p class="subtitle">Retrouvez ici les produits ajoutes depuis le catalogue.</p>
     </div>
-
-    <a class="back-link" routerLink="/products-list">Retour au catalogue</a>
   </header>
 
   <p *ngIf="pageError" class="feedback feedback--error">{{ pageError }}</p>

@@ -12,6 +12,22 @@
     linear-gradient(180deg, #f7f3ee 0%, #eef2f6 100%);
 }
 
+.back-button {
+  width: fit-content;
+  min-height: 52px;
+  margin-bottom: 20px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #18293c;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(28, 43, 63, 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
 .topbar {
   display: flex;
   align-items: flex-start;
@@ -20,7 +36,6 @@
   margin-bottom: 40px;
 }
 
-.toolbar-actions,
 .topbar-pills {
   display: flex;
   align-items: center;
@@ -28,7 +43,6 @@
   flex-wrap: wrap;
 }
 
-.icon-button,
 .pill-button,
 .product-card {
   border: 0;
@@ -36,27 +50,7 @@
   box-shadow: 0 10px 24px rgba(41, 52, 72, 0.12);
 }
 
-.icon-button {
-  width: 58px;
-  height: 58px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #2c4058;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.icon-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.42;
-  transform: none;
-  box-shadow: 0 10px 24px rgba(41, 52, 72, 0.12);
-}
-
-.icon-button svg,
+.back-button svg,
 .plus-circle svg {
   width: 24px;
   height: 24px;
@@ -268,7 +262,7 @@
   justify-content: center;
 }
 
-.icon-button:hover,
+.back-button:hover,
 .product-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(41, 52, 72, 0.16);
@@ -382,14 +376,12 @@
     padding: 16px 16px 32px;
   }
 
-  .toolbar-actions,
-  .topbar-pills {
-    gap: 12px;
+  .back-button {
+    margin-bottom: 16px;
   }
 
-  .icon-button {
-    width: 52px;
-    height: 52px;
+  .topbar-pills {
+    gap: 12px;
   }
 
   .pill-button {
