@@ -1,1 +1,67 @@
-<p>wishlist works!</p>
+<section class="wishlist-page">
+  <a class="back-button" routerLink="/products-list" aria-label="Retour au catalogue">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15 5L8 12L15 19" />
+      <path d="M9 12H21" />
+    </svg>
+    <span>Retour</span>
+  </a>
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">WISHLIST</p>
+      <h1>Vos favoris.</h1>
+      <p class="subtitle">Retrouvez ici les produits que vous avez mis de cote.</p>
+    </div>
+  </header>
+
+  <p *ngIf="pageError" class="feedback feedback--error">{{ pageError }}</p>
+
+  <div class="state-row" *ngIf="isLoading">
+    <p class="feedback">Chargement de la wishlist...</p>
+  </div>
+
+  <ng-container *ngIf="!isLoading && wishlistItems.length > 0; else emptyState">
+    <div class="wishlist-summary">
+      <div class="summary-pill">{{ totalItems }} favori(s)</div>
+    </div>
+
+    <div class="wishlist-grid">
+      <article
+        *ngFor="let item of wishlistItems; trackBy: trackByProductId"
+        class="wishlist-card">
+        <div class="product-image-shell">
+          <img
+            *ngIf="item.product.image; else imageFallback"
+            class="product-image"
+            [src]="item.product.image"
+            [alt]="item.product.name">
+
+          <ng-template #imageFallback>
+            <div class="product-image-placeholder">No image</div>
+          </ng-template>
+        </div>
+
+        <div class="wishlist-card-content">
+          <p class="product-code">{{ item.product.code }}</p>
+          <h2>{{ item.product.name }}</h2>
+          <p class="product-meta">{{ item.product.category }}</p>
+          <p class="product-price">{{ item.product.price | number:'1.2-2' }} EUR</p>
+          <p class="product-meta">Ref: {{ item.product.internalReference }}</p>
+        </div>
+
+        <button type="button" class="remove-button" (click)="removeProduct(item.product)">
+          Retirer
+        </button>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state-shell" *ngIf="!isLoading">
+      <h2>Votre wishlist est vide.</h2>
+      <p>Parcourez le catalogue pour enregistrer les produits que vous aimez.</p>
+      <a class="browse-link" routerLink="/products-list">Voir le catalogue</a>
+    </div>
+  </ng-template>
+</section>

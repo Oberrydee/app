@@ -11,22 +11,33 @@
     <div class="hero-copy">
       <p class="eyebrow">CATALOGUE</p>
       <h1>Parcourez tous les produits.</h1>
-      <p class="subtitle">Ajoutez directement un article au panier depuis sa carte.</p>
+      <p class="subtitle">Ajoutez directement un article au panier ou a la wishlist depuis sa carte.</p>
     </div>
 
-    <a class="cart-button" routerLink="/cart" aria-label="Ouvrir le panier">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="9" cy="20" r="1.75" />
-        <circle cx="18" cy="20" r="1.75" />
-        <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
-      </svg>
-      <span class="cart-button__label">Panier</span>
-      <span class="cart-button__badge">{{ cartCount$ | async }}</span>
-    </a>
+    <div class="topbar-actions">
+      <a class="wishlist-button" routerLink="/wishlist" aria-label="Ouvrir la wishlist">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 20.5L4.8 13.6C2.6 11.5 2.4 8 4.4 5.8C6.2 3.8 9.4 3.5 11.5 5.1L12 5.5L12.5 5.1C14.6 3.5 17.8 3.8 19.6 5.8C21.6 8 21.4 11.5 19.2 13.6L12 20.5Z" />
+        </svg>
+        <span class="button-label">Wishlist</span>
+        <span class="button-badge">{{ wishlistCount$ | async }}</span>
+      </a>
+
+      <a class="cart-button" routerLink="/cart" aria-label="Ouvrir le panier">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="20" r="1.75" />
+          <circle cx="18" cy="20" r="1.75" />
+          <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
+        </svg>
+        <span class="button-label">Panier</span>
+        <span class="button-badge">{{ cartCount$ | async }}</span>
+      </a>
+    </div>
   </header>
 
   <p *ngIf="pageError" class="feedback feedback--error">{{ pageError }}</p>
   <p *ngIf="cartFeedback" class="feedback feedback--success">{{ cartFeedback }}</p>
+  <p *ngIf="wishlistFeedback" class="feedback feedback--success">{{ wishlistFeedback }}</p>
 
   <div class="state-row" *ngIf="isLoading">
     <p class="feedback">Chargement du catalogue...</p>
@@ -36,18 +47,32 @@
     <article
       *ngFor="let product of products; trackBy: trackByProductId"
       class="product-card">
-      <button
-        type="button"
-        class="card-cart-button"
-        [disabled]="pendingProductId === product.id"
-        (click)="addToCart(product)"
-        aria-label="Ajouter au panier">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="9" cy="20" r="1.75" />
-          <circle cx="18" cy="20" r="1.75" />
-          <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
-        </svg>
-      </button>
+      <div class="card-actions">
+        <button
+          type="button"
+          class="card-action-button card-action-button--wishlist"
+          [class.card-action-button--wishlist-active]="isInWishlist(product.id)"
+          [disabled]="pendingWishlistProductId === product.id"
+          (click)="toggleWishlist(product)"
+          aria-label="Ajouter a la wishlist">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20.5L4.8 13.6C2.6 11.5 2.4 8 4.4 5.8C6.2 3.8 9.4 3.5 11.5 5.1L12 5.5L12.5 5.1C14.6 3.5 17.8 3.8 19.6 5.8C21.6 8 21.4 11.5 19.2 13.6L12 20.5Z" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="card-action-button card-action-button--cart"
+          [disabled]="pendingProductId === product.id"
+          (click)="addToCart(product)"
+          aria-label="Ajouter au panier">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="9" cy="20" r="1.75" />
+            <circle cx="18" cy="20" r="1.75" />
+            <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
+          </svg>
+        </button>
+      </div>
 
       <div class="product-image-shell">
         <img
