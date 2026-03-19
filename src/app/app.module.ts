@@ -6,12 +6,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthTokenInterceptor } from './modules/authentication-module/authentication/auth-token.interceptor';
-import { ProductComponent } from './modules/cart-module/product/product.component';
+import { ProductComponent } from './modules/components/product/product.component';
 import { RegisterComponent } from './modules/authentication-module/register/register.component';
 import { CartComponent } from './pages/cart/cart.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
+import { ProductsListComponent } from './pages/products-list/products-list.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { WishlistComponent } from './pages/wishlist/wishlist.component';
     WishlistComponent,
     LoginComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    ProductsListComponent
   ],
   imports: [
     BrowserModule,

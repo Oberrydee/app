@@ -4,15 +4,32 @@
       <p class="eyebrow">HOME</p>
       <h1>Bienvenue sur votre espace e-commerce.</h1>
       <p class="subtitle">
-        Vous etes connecte. Utilisez la navigation de l'application pour acceder
-        au panier, aux produits et a la wishlist.
+        Vous êtes connecté. Utilisez la navigation de l'application pour accéder
+        au panier, aux produits et à la wishlist.
       </p>
     </div>
 
     <div class="actions">
-      <button type="button" class="logout-button" (click)="logout()">
-        Log out
+      <button type="button" class="button" (click)="logout()">
+        Déconnexion
       </button>
+      <!-- bouton pour aller vers config produits (ajout, edit, suppression) if user is admin -->
+       <button *ngIf="isAdmin$ | async" type="button" class="button">
+          <a routerLink="/products-config">Gérer les produits</a>
+       </button>
+
+       <!-- bouton pour aller vers list produits -->
+        <button type="button" class="button">
+            <a routerLink="/products-list">Voir les produits</a>
+        </button>
+        <!-- bouton pour aller vers panier -->
+        <button type="button" class="button">
+            <a routerLink="/cart">Voir le panier</a>
+        </button>
+         <!-- bouton pour aller vers wishlist -->
+        <button type="button" class="button">
+            <a routerLink="/wishlist">Voir la wishlist</a>
+        </button>
     </div>
   </div>
 </section>

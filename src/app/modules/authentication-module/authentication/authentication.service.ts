@@ -82,4 +82,10 @@ export class AuthenticationService {
         this.removeToken();
         this.currentUserSubject.next(null);
     }
+
+    isAdmin(): Observable<boolean> {
+        return this.currentUser$.pipe(
+            map(user => user?.email === 'admin@admin.com')
+        );
+    }
 }

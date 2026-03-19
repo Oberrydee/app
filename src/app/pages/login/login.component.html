@@ -58,9 +58,9 @@
         [formGroup]="registerForm"
         (ngSubmit)="submit()">
         <label class="field">
-          <span>Prenom</span>
+          <span>Prénom</span>
           <input type="text" formControlName="firstName" placeholder="Jane">
-          <small *ngIf="hasError('register', 'firstName', 'required')">Le prenom est requis.</small>
+          <small *ngIf="hasError('register', 'firstName', 'required')">Le prénom est requis.</small>
         </label>
 
         <label class="field">
@@ -78,15 +78,15 @@
 
         <label class="field">
           <span>Mot de passe</span>
-          <input type="password" formControlName="password" placeholder="6 caracteres minimum">
+          <input type="password" formControlName="password" placeholder="6 caractères minimum">
           <small *ngIf="hasError('register', 'password', 'required')">Le mot de passe est requis.</small>
           <small *ngIf="hasError('register', 'password', 'minlength')">
-            Le mot de passe doit contenir au moins 6 caracteres.
+            Le mot de passe doit contenir au moins 6 caractères.
           </small>
         </label>
 
         <button type="submit" class="submit-button" [disabled]="loading">
-          {{ loading ? 'Creation...' : 'Creer un compte' }}
+          {{ loading ? 'Création...' : 'Créer un compte' }}
         </button>
       </form>
     </div>
