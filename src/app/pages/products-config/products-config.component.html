@@ -8,7 +8,12 @@
         </svg>
       </a>
 
-      <button type="button" class="icon-button" aria-label="Supprimer">
+      <button
+        type="button"
+        class="icon-button"
+        aria-label="Supprimer"
+        [disabled]="!selectedProduct || isLoading"
+        (click)="deleteSelectedProduct()">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 7H20" />
           <path d="M9 7V4H15V7" />
@@ -18,21 +23,67 @@
         </svg>
       </button>
 
-      <button type="button" class="icon-button" aria-label="Modifier">
+      <button
+        type="button"
+        class="icon-button"
+        aria-label="Modifier"
+        [disabled]="!selectedProduct || isLoading"
+        (click)="openEditDialog()">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 20L8.5 19L19 8.5L15.5 5L5 15.5L4 20Z" />
           <path d="M13.5 7L17 10.5" />
         </svg>
       </button>
     </div>
+
+    <div class="topbar-pills">
+      <div class="pill-button">Produits: {{ products.length }}</div>
+      <div class="pill-button pill-button--solid">
+        {{ selectedProduct ? selectedProduct.name : 'Aucune selection' }}
+      </div>
+    </div>
   </div>
 
-  <div class="cards-grid" *ngIf="cards.length > 0; else emptyState">
+  <p *ngIf="pageError" class="feedback feedback--error">{{ pageError }}</p>
+
+  <div class="state-row" *ngIf="isLoading">
+    <p class="feedback">Chargement des produits...</p>
+  </div>
+
+  <div class="cards-grid" *ngIf="!isLoading && products.length > 0; else emptyState">
     <article
-      *ngFor="let card of cards"
+      class="product-card product-card--create"
+      (click)="openCreateDialog()">
+      <div class="create-card-content">
+        <span class="plus-circle">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5V19" />
+            <path d="M5 12H19" />
+          </svg>
+        </span>
+        <span>Nouveau produit</span>
+      </div>
+    </article>
+
+    <article
+      *ngFor="let product of products; trackBy: trackByProductId"
       class="product-card"
-      [class.product-card--create]="card.isCreateCard">
-      <ng-container *ngIf="card.isCreateCard; else defaultCard">
+      [class.product-card--selected]="selectedProduct?.id === product.id"
+      (click)="selectProduct(product)">
+      <div class="product-card-content">
+        <p class="product-code">{{ product.code }}</p>
+        <h2>{{ product.name }}</h2>
+        <p class="product-meta">{{ product.category }}</p>
+        <p class="product-price">{{ product.price | number:'1.2-2' }} EUR</p>
+        <p class="product-meta">Ref: {{ product.internalReference }}</p>
+        <p class="product-meta" *ngIf="product.imageFileName">Image: {{ product.imageFileName }}</p>
+      </div>
+    </article>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="empty-state-shell" *ngIf="!isLoading">
+      <article class="product-card product-card--create" (click)="openCreateDialog()">
         <div class="create-card-content">
           <span class="plus-circle">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -40,17 +91,82 @@
               <path d="M5 12H19" />
             </svg>
           </span>
-          <span>{{ card?.title }}</span>
+          <span>Nouveau produit</span>
         </div>
-      </ng-container>
-
-      <ng-template #defaultCard>
-        <h2>{{ card?.title }}</h2>
-      </ng-template>
-    </article>
-  </div>
-
-  <ng-template #emptyState>
-    <p class="empty-state">Aucun produit trouve. Utilisez le bouton "+" pour en ajouter un.</p>
+      </article>
+      <p class="empty-state">Aucun produit trouve. Utilisez la carte Nouveau produit pour en ajouter un.</p>
+    </div>
   </ng-template>
+
+  <p-dialog
+    [(visible)]="isDialogVisible"
+    [header]="dialogMode === 'create' ? 'Creer un produit' : 'Modifier le produit'"
+    [modal]="true"
+    [closable]="true"
+    styleClass="product-dialog">
+    <form class="product-form" [formGroup]="productForm" (ngSubmit)="saveProduct()">
+      <p *ngIf="dialogError" class="feedback feedback--error">{{ dialogError }}</p>
+
+      <div class="form-grid">
+        <label class="field">
+          <span>Code</span>
+          <input type="text" formControlName="code">
+          <small *ngIf="productForm.controls.code.touched && productForm.controls.code.hasError('required')">
+            Le code est requis.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Nom</span>
+          <input type="text" formControlName="name">
+          <small *ngIf="productForm.controls.name.touched && productForm.controls.name.hasError('required')">
+            Le nom est requis.
+          </small>
+        </label>
+
+        <label class="field field--full">
+          <span>Image</span>
+          <input type="file" accept="image/*" (change)="onImageSelected($event)">
+          <strong *ngIf="selectedImageName" class="file-name">{{ selectedImageName }}</strong>
+          <small *ngIf="dialogMode === 'edit'">Le backend exige une image pour chaque modification.</small>
+          <small *ngIf="productForm.controls.imageFile.touched && productForm.controls.imageFile.hasError('required')">
+            L image est requise.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Categorie</span>
+          <input type="text" formControlName="category">
+          <small *ngIf="productForm.controls.category.touched && productForm.controls.category.hasError('required')">
+            La categorie est requise.
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Prix</span>
+          <input type="number" min="0" step="0.01" formControlName="price">
+          <small *ngIf="productForm.controls.price.touched && productForm.controls.price.hasError('required')">
+            Le prix est requis.
+          </small>
+        </label>
+
+        <label class="field field--full">
+          <span>Internal reference</span>
+          <input type="text" formControlName="internalReference">
+          <small *ngIf="productForm.controls.internalReference.touched && productForm.controls.internalReference.hasError('required')">
+            L internal reference est requise.
+          </small>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="secondary-button" (click)="closeDialog()">
+          Annuler
+        </button>
+        <button type="submit" class="primary-button" [disabled]="isSaving">
+          {{ isSaving ? 'Enregistrement...' : (dialogMode === 'create' ? 'Creer' : 'Modifier') }}
+        </button>
+      </div>
+    </form>
+  </p-dialog>
 </section>

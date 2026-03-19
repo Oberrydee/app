@@ -1,31 +1,203 @@
-import { Component } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
+import { ProductFormValue, ProductResponse } from 'src/app/models/product.models';
+import { ProductService } from 'src/app/modules/components/product/product.service';
 
 @Component({
   selector: 'app-products-config',
   templateUrl: './products-config.component.html',
   styleUrls: ['./products-config.component.scss']
 })
-export class ProductsConfigComponent {
-  readonly filters = [
-    'Tous les produits',
-    'Collections',
-    'Promotions'
-  ];
+export class ProductsConfigComponent implements OnInit {
+  products: ProductResponse[] = [];
+  selectedProduct: ProductResponse | null = null;
+  isDialogVisible = false;
+  dialogMode: 'create' | 'edit' = 'create';
+  isLoading = false;
+  isSaving = false;
+  pageError = '';
+  dialogError = '';
+  selectedImageName = '';
 
-  readonly cards = [
-    { title: 'Nouveau produit', isCreateCard: true },
-    { title: 'Sneaker Atlas' },
-    { title: 'Sac Studio 24h' },
-    { title: 'Lampe Orbit edition hiver' },
-    { title: 'Veste Transit' },
-    { title: 'Ecouteurs Echo Mini' },
-    { title: 'Chaise Sirocco' },
-    { title: 'Montre Meridian' },
-    { title: 'Carnet Atelier' },
-    { title: 'Lunettes Horizon' },
-    { title: 'Bouteille Daily Carry' },
-    { title: 'Tapis Nomad' },
-    { title: 'Bureau Compact' },
-    { title: 'Table d appoint Arc' }
-  ];
+  readonly productForm = this.formBuilder.group({
+    code: ['', [Validators.required]],
+    name: ['', [Validators.required]],
+    imageFile: [null as File | null, [Validators.required]],
+    category: ['', [Validators.required]],
+    price: [null as number | null, [Validators.required]],
+    internalReference: ['', [Validators.required]]
+  });
+
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly productService: ProductService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(): void {
+    this.isLoading = true;
+    this.pageError = '';
+
+    this.productService.getAll().pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: (products) => {
+        this.products = products;
+
+        if (this.selectedProduct) {
+          this.selectedProduct = products.find((product) => product.id === this.selectedProduct?.id) ?? null;
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.pageError = this.extractErrorMessage(error, 'Impossible de charger les produits.');
+      }
+    });
+  }
+
+  openCreateDialog(): void {
+    this.dialogMode = 'create';
+    this.dialogError = '';
+    this.selectedImageName = '';
+    this.productForm.reset({
+      code: '',
+      name: '',
+      imageFile: null,
+      category: '',
+      price: null,
+      internalReference: ''
+    });
+    this.isDialogVisible = true;
+  }
+
+  openEditDialog(): void {
+    if (!this.selectedProduct) {
+      return;
+    }
+
+    this.dialogMode = 'edit';
+    this.dialogError = '';
+    this.selectedImageName = this.selectedProduct.imageFileName || '';
+    this.productForm.reset({
+      code: this.selectedProduct.code,
+      name: this.selectedProduct.name,
+      imageFile: null,
+      category: this.selectedProduct.category,
+      price: this.selectedProduct.price,
+      internalReference: this.selectedProduct.internalReference
+    });
+    this.productForm.controls.imageFile.setErrors({ required: true });
+    this.isDialogVisible = true;
+  }
+
+  closeDialog(): void {
+    this.isDialogVisible = false;
+    this.dialogError = '';
+    this.selectedImageName = '';
+  }
+
+  selectProduct(product: ProductResponse): void {
+    this.selectedProduct = this.selectedProduct?.id === product.id ? null : product;
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0] ?? null;
+    this.productForm.patchValue({ imageFile: file });
+    this.productForm.controls.imageFile.markAsTouched();
+    this.productForm.controls.imageFile.updateValueAndValidity();
+    this.selectedImageName = file?.name ?? '';
+  }
+
+  saveProduct(): void {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    const payload = this.productForm.getRawValue() as ProductFormValue;
+    const request$ = this.dialogMode === 'create' || !this.selectedProduct
+      ? this.productService.create(payload)
+      : this.productService.update(this.selectedProduct.id, payload);
+
+    this.isSaving = true;
+    this.dialogError = '';
+
+    request$.pipe(
+      finalize(() => {
+        this.isSaving = false;
+      })
+    ).subscribe({
+      next: (product) => {
+        this.closeDialog();
+        this.selectedProduct = product;
+        this.loadProducts();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.dialogError = this.extractErrorMessage(error, 'Impossible de sauvegarder le produit.');
+      }
+    });
+  }
+
+  deleteSelectedProduct(): void {
+    if (!this.selectedProduct) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Supprimer le produit "${this.selectedProduct.name}" ?`);
+    if (!confirmed) {
+      return;
+    }
+
+    this.pageError = '';
+    this.isLoading = true;
+
+    this.productService.delete(this.selectedProduct.id).pipe(
+      finalize(() => {
+        this.isLoading = false;
+      })
+    ).subscribe({
+      next: () => {
+        this.selectedProduct = null;
+        this.loadProducts();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.pageError = this.extractErrorMessage(error, 'Impossible de supprimer le produit.');
+      }
+    });
+  }
+
+  trackByProductId(_: number, product: ProductResponse): number {
+    return product.id;
+  }
+
+  private extractErrorMessage(error: HttpErrorResponse, fallback: string): string {
+    const errorPayload = error.error as
+      | { title?: string; errors?: Record<string, string[] | string> }
+      | undefined;
+
+    if (typeof errorPayload?.title === 'string' && errorPayload.title.trim()) {
+      return errorPayload.title;
+    }
+
+    const validationErrors = errorPayload?.errors;
+    if (validationErrors) {
+      const firstError = Object.values(validationErrors)[0];
+      if (Array.isArray(firstError) && firstError.length > 0) {
+        return firstError[0];
+      }
+
+      if (typeof firstError === 'string' && firstError.trim()) {
+        return firstError;
+      }
+    }
+
+    return fallback;
+  }
 }

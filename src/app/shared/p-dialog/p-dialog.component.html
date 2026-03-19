@@ -1,0 +1,25 @@
+<ng-container *ngIf="visible">
+  <div class="p-dialog-mask" (click)="onMaskClick()"></div>
+
+  <section class="p-dialog-panel" [ngClass]="styleClass" role="dialog" aria-modal="true">
+    <header class="p-dialog-header">
+      <h2>{{ header }}</h2>
+
+      <button
+        *ngIf="closable"
+        type="button"
+        class="p-dialog-close"
+        aria-label="Fermer"
+        (click)="close()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6L18 18" />
+          <path d="M18 6L6 18" />
+        </svg>
+      </button>
+    </header>
+
+    <div class="p-dialog-content">
+      <ng-content></ng-content>
+    </div>
+  </section>
+</ng-container>

@@ -14,6 +14,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { ProductsListComponent } from './pages/products-list/products-list.component';
 import { ProductsConfigComponent } from './pages/products-config/products-config.component';
+import { PDialogComponent } from './shared/p-dialog/p-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ProductsConfigComponent } from './pages/products-config/products-config
     HomeComponent,
     RegisterComponent,
     ProductsListComponent,
-    ProductsConfigComponent
+    ProductsConfigComponent,
+    PDialogComponent
   ],
   imports: [
     BrowserModule,
