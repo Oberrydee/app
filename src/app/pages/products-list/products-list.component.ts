@@ -73,10 +73,10 @@ export class ProductsListComponent implements OnInit {
       })
     ).subscribe({
       next: () => {
-        this.cartFeedback = `${product.name} a ete ajoute au panier.`;
+        this.cartFeedback = `${product.name} a été ajouté au panier.`;
       },
       error: (error: HttpErrorResponse | Error) => {
-        this.pageError = 'Impossible d ajouter le produit au panier.\n '+error.message;
+        this.pageError = 'Impossible d\'ajouter le produit au panier.\n '+error.message;
       }
     });
   }
@@ -106,11 +106,11 @@ export class ProductsListComponent implements OnInit {
       next: (result) => {
         this.wishlistProductIds = new Set(result.productIds);
         this.wishlistFeedback = result.action === 'added'
-          ? `${product.name} a ete ajoute a la wishlist.`
-          : `${product.name} a ete retire de la wishlist.`;
+          ? `${product.name} a été ajouté à la wishlist.`
+          : `${product.name} a été retiré de la wishlist.`;
       },
       error: (error: Error) => {
-        this.pageError = 'Impossible de mettre a jour la wishlist.\n ' + error.message;
+        this.pageError = 'Impossible de mettre à jour la wishlist.\n ' + error.message;
       }
     });
   }

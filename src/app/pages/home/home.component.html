@@ -1,24 +1,24 @@
 <section class="home-page">
   <div class="home-shell">
     <div class="hero">
-      <p class="eyebrow">HOME</p>
+      <p class="eyebrow">Accueil</p>
       <h1>Bienvenue sur votre espace e-commerce.</h1>
       <ng-container *ngIf="currentUser$ | async as currentUser">
         <p class="subtitle">
-          Vous etes connecte {{ currentUser.firstName }} {{ currentUser.lastName }}.
-          Utilisez la navigation de l'application pour acceder
-          au panier, aux produits et a la wishlist.
+          Vous êtes connecté {{ currentUser.firstName }} {{ currentUser.lastName }}.
+          Utilisez la navigation de l'application pour accéder
+          au panier, aux produits et à la wishlist.
         </p>
       </ng-container>
     </div>
 
     <div class="actions">
       <button type="button" class="button" (click)="logout()">
-        Deconnexion
+        Déconnexion
       </button>
 
       <button *ngIf="isAdmin$ | async" type="button" class="button">
-        <a routerLink="/products-config">Gerer les produits</a>
+        <a routerLink="/products-config">Gérer les produits</a>
       </button>
 
       <button type="button" class="button">
