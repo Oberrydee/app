@@ -1,20 +1,23 @@
 :host {
   display: block;
-  min-height: 100vh;
+  height: 98vh;
 }
 
-.app-shell {
-  min-height: 100vh;
-}
+// .app-shell {
+//   height: 100%;
+// }
 
 .app-shell--with-sidebar {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
+  height: 100%;
   background: #edf3f8;
+  overflow: hidden;
 }
 
 .sidebar {
-  min-height: 100vh;
+  height: 100%;
+  box-sizing: border-box;
   padding: 28px 20px 24px;
   background: linear-gradient(180deg, #162a3c 0%, #0f1d2b 100%);
   color: #f4f8fb;
@@ -90,22 +93,36 @@
 
 .app-content {
   min-width: 0;
+  height: 100%;
+  overflow: auto;
 }
 
 .app-content--full {
-  min-height: 100vh;
+  height: 100%;
 }
 
 @media (max-width: 900px) {
   .app-shell--with-sidebar {
     grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 
   .sidebar {
     min-height: auto;
+    height: auto;
     position: static;
     border-bottom-left-radius: 24px;
     border-bottom-right-radius: 24px;
+  }
+
+  .app-content {
+    height: auto;
+    overflow: visible;
+  }
+
+  .app-content--full {
+    height: auto;
   }
 
   .sidebar__nav {
