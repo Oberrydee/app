@@ -1,7 +1,7 @@
 <div class="app-shell" [class.app-shell--with-sidebar]="showSidebar">
   <aside *ngIf="showSidebar" class="sidebar">
     <div class="sidebar__head">
-      <p class="sidebar__eyebrow">Navigation</p>
+      <!-- <p class="sidebar__eyebrow">Navigation</p> -->
       <ng-container *ngIf="currentUser$ | async as currentUser">
         <h1>{{ currentUser.firstName }} {{ currentUser.lastName }}</h1>
         <p>{{ currentUser.email }}</p>
