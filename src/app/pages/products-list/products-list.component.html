@@ -39,150 +39,162 @@
   <p *ngIf="cartFeedback" class="feedback feedback--success">{{ cartFeedback }}</p>
   <p *ngIf="wishlistFeedback" class="feedback feedback--success">{{ wishlistFeedback }}</p>
 
-  <section class="catalogue-controls" *ngIf="!isLoading && products.length > 0">
-    <div class="control-group control-group--dropdown">
-      <span class="control-label">Categories</span>
-      <button type="button" class="dropdown-toggle" (click)="toggleCategoryDropdown()">
-        <span>{{ selectedCategories.size > 0 ? selectedCategories.size + ' selection(s)' : 'Toutes les categories' }}</span>
-        <span class="dropdown-toggle__arrow">{{ categoryDropdownOpen ? '▲' : '▼' }}</span>
-      </button>
-
-      <div class="dropdown-panel" *ngIf="categoryDropdownOpen">
-        <label class="dropdown-option" *ngFor="let category of availableCategories">
-          <input
-            type="checkbox"
-            [checked]="selectedCategories.has(category)"
-            (change)="toggleCategory(category)">
-          <span>{{ category }}</span>
-        </label>
-
-        <button type="button" class="link-button" (click)="clearCategories()">Effacer</button>
-      </div>
-    </div>
-
-    <div class="control-group control-group--price">
-      <span class="control-label">Prix</span>
-      <div class="range-inputs">
-        <label>
-          <span>Min</span>
-          <input type="range" [min]="priceFloor" [max]="priceCeil" [value]="currentPriceMin" (input)="setMinPrice(($any($event.target)).value)">
-        </label>
-        <label>
-          <span>Max</span>
-          <input type="range" [min]="priceFloor" [max]="priceCeil" [value]="currentPriceMax" (input)="setMaxPrice(($any($event.target)).value)">
-        </label>
-      </div>
-      <div class="range-values">
-        <span>{{ currentPriceMin | number:'1.0-0' }} EUR</span>
-        <span>{{ currentPriceMax | number:'1.0-0' }} EUR</span>
-      </div>
-    </div>
-
-    <div class="control-group">
-      <label class="select-field">
-        <span class="control-label">Tri</span>
-        <select [value]="sortOption" (change)="setSortOption($any($event.target).value)">
-          <option value="priceAsc">Prix croissant</option>
-          <option value="priceDesc">Prix decroissant</option>
-          <option value="createdAtAsc">Date d ajout croissante</option>
-          <option value="createdAtDesc">Date d ajout decroissante</option>
-        </select>
-      </label>
-    </div>
-
-    <div class="control-group">
-      <label class="select-field">
-        <span class="control-label">Articles par page</span>
-        <select [value]="itemsPerPage" (change)="setItemsPerPage($any($event.target).value)">
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="20">20</option>
-          <option [value]="50">50</option>
-        </select>
-      </label>
-    </div>
-  </section>
-
   <div class="state-row" *ngIf="isLoading">
     <p class="feedback">Chargement du catalogue...</p>
   </div>
 
-  <div class="catalogue-meta" *ngIf="!isLoading && products.length > 0">
-    <p>{{ sortedProducts.length }} produit(s) trouve(s)</p>
-    <p>Page {{ safeCurrentPage }} / {{ totalPages }}</p>
-  </div>
+  <section class="catalogue-layout" *ngIf="!isLoading && products.length > 0; else emptyState">
+    <div class="catalogue-main">
+      <div class="catalogue-meta">
+        <p>{{ sortedProducts.length }} produit(s) trouve(s)</p>
+        <p>Page {{ safeCurrentPage }} / {{ totalPages }}</p>
+      </div>
 
-  <div class="products-grid" *ngIf="!isLoading && sortedProducts.length > 0; else emptyState">
-    <article
-      *ngFor="let product of paginatedProducts; trackBy: trackByProductId"
-      class="product-card">
-      <div class="card-actions">
+      <div class="products-grid" *ngIf="sortedProducts.length > 0; else filteredEmptyState">
+        <article
+          *ngFor="let product of paginatedProducts; trackBy: trackByProductId"
+          class="product-card">
+          <div class="card-actions">
+            <button
+              type="button"
+              class="card-action-button card-action-button--wishlist"
+              [class.card-action-button--wishlist-active]="isInWishlist(product.id)"
+              [disabled]="pendingWishlistProductId === product.id"
+              (click)="toggleWishlist(product)"
+              aria-label="Ajouter a la wishlist">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 20.5L4.8 13.6C2.6 11.5 2.4 8 4.4 5.8C6.2 3.8 9.4 3.5 11.5 5.1L12 5.5L12.5 5.1C14.6 3.5 17.8 3.8 19.6 5.8C21.6 8 21.4 11.5 19.2 13.6L12 20.5Z" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              class="card-action-button card-action-button--cart"
+              [disabled]="pendingProductId === product.id"
+              (click)="addToCart(product)"
+              aria-label="Ajouter au panier">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="9" cy="20" r="1.75" />
+                <circle cx="18" cy="20" r="1.75" />
+                <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="product-image-shell">
+            <img
+              *ngIf="product.image; else imageFallback"
+              class="product-image"
+              [src]="product.image"
+              [alt]="product.name">
+
+            <ng-template #imageFallback>
+              <div class="product-image-placeholder">No image</div>
+            </ng-template>
+          </div>
+
+          <div class="product-card-content">
+            <p class="product-code">{{ product.code }}</p>
+            <h2>{{ product.name }}</h2>
+            <p class="product-meta">{{ product.category }}</p>
+            <p class="product-price">{{ product.price | number:'1.2-2' }} EUR</p>
+            <p class="product-meta">Ref: {{ product.internalReference }}</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="pagination" *ngIf="sortedProducts.length > 0">
+        <button type="button" class="pagination-button" [disabled]="safeCurrentPage === 1" (click)="previousPage()">Precedent</button>
+
         <button
+          *ngFor="let page of pageNumbers"
           type="button"
-          class="card-action-button card-action-button--wishlist"
-          [class.card-action-button--wishlist-active]="isInWishlist(product.id)"
-          [disabled]="pendingWishlistProductId === product.id"
-          (click)="toggleWishlist(product)"
-          aria-label="Ajouter a la wishlist">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 20.5L4.8 13.6C2.6 11.5 2.4 8 4.4 5.8C6.2 3.8 9.4 3.5 11.5 5.1L12 5.5L12.5 5.1C14.6 3.5 17.8 3.8 19.6 5.8C21.6 8 21.4 11.5 19.2 13.6L12 20.5Z" />
-          </svg>
+          class="pagination-button"
+          [class.pagination-button--active]="page === safeCurrentPage"
+          (click)="goToPage(page)">
+          {{ page }}
         </button>
 
-        <button
-          type="button"
-          class="card-action-button card-action-button--cart"
-          [disabled]="pendingProductId === product.id"
-          (click)="addToCart(product)"
-          aria-label="Ajouter au panier">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="9" cy="20" r="1.75" />
-            <circle cx="18" cy="20" r="1.75" />
-            <path d="M3 4H5L7.4 15H18.2L21 7H8.2" />
-          </svg>
-        </button>
+        <button type="button" class="pagination-button" [disabled]="safeCurrentPage === totalPages" (click)="nextPage()">Suivant</button>
       </div>
+    </div>
 
-      <div class="product-image-shell">
-        <img
-          *ngIf="product.image; else imageFallback"
-          class="product-image"
-          [src]="product.image"
-          [alt]="product.name">
+    <aside class="catalogue-sidebar">
+      <section class="catalogue-controls">
+        <div class="control-group control-group--dropdown">
+          <span class="control-label">Categories</span>
+          <button type="button" class="dropdown-toggle" (click)="toggleCategoryDropdown()">
+            <span>{{ selectedCategories.size > 0 ? selectedCategories.size + ' selection(s)' : 'Toutes les categories' }}</span>
+            <span class="dropdown-toggle__arrow">{{ categoryDropdownOpen ? '▲' : '▼' }}</span>
+          </button>
 
-        <ng-template #imageFallback>
-          <div class="product-image-placeholder">No image</div>
-        </ng-template>
-      </div>
+          <div class="dropdown-panel" *ngIf="categoryDropdownOpen">
+            <label class="dropdown-option" *ngFor="let category of availableCategories">
+              <input
+                type="checkbox"
+                [checked]="selectedCategories.has(category)"
+                (change)="toggleCategory(category)">
+              <span>{{ category }}</span>
+            </label>
 
-      <div class="product-card-content">
-        <p class="product-code">{{ product.code }}</p>
-        <h2>{{ product.name }}</h2>
-        <p class="product-meta">{{ product.category }}</p>
-        <p class="product-price">{{ product.price | number:'1.2-2' }} EUR</p>
-        <p class="product-meta">Ref: {{ product.internalReference }}</p>
-      </div>
-    </article>
-  </div>
+            <button type="button" class="link-button" (click)="clearCategories()">Effacer</button>
+          </div>
+        </div>
 
-  <div class="pagination" *ngIf="!isLoading && sortedProducts.length > 0">
-    <button type="button" class="pagination-button" [disabled]="safeCurrentPage === 1" (click)="previousPage()">Precedent</button>
+        <div class="control-group control-group--price">
+          <span class="control-label">Prix</span>
+          <div class="range-inputs">
+            <label>
+              <span>Min</span>
+              <input type="range" [min]="priceFloor" [max]="priceCeil" [value]="currentPriceMin" (input)="setMinPrice(($any($event.target)).value)">
+            </label>
+            <label>
+              <span>Max</span>
+              <input type="range" [min]="priceFloor" [max]="priceCeil" [value]="currentPriceMax" (input)="setMaxPrice(($any($event.target)).value)">
+            </label>
+          </div>
+          <div class="range-values">
+            <span>{{ currentPriceMin | number:'1.0-0' }} EUR</span>
+            <span>{{ currentPriceMax | number:'1.0-0' }} EUR</span>
+          </div>
+        </div>
 
-    <button
-      *ngFor="let page of pageNumbers"
-      type="button"
-      class="pagination-button"
-      [class.pagination-button--active]="page === safeCurrentPage"
-      (click)="goToPage(page)">
-      {{ page }}
-    </button>
+        <div class="control-group">
+          <label class="select-field">
+            <span class="control-label">Tri</span>
+            <select [value]="sortOption" (change)="setSortOption($any($event.target).value)">
+              <option value="priceAsc">Prix croissant</option>
+              <option value="priceDesc">Prix decroissant</option>
+              <option value="createdAtAsc">Date d ajout croissante</option>
+              <option value="createdAtDesc">Date d ajout decroissante</option>
+            </select>
+          </label>
+        </div>
 
-    <button type="button" class="pagination-button" [disabled]="safeCurrentPage === totalPages" (click)="nextPage()">Suivant</button>
-  </div>
+        <div class="control-group">
+          <label class="select-field">
+            <span class="control-label">Articles par page</span>
+            <select [value]="itemsPerPage" (change)="setItemsPerPage($any($event.target).value)">
+              <option [value]="5">5</option>
+              <option [value]="10">10</option>
+              <option [value]="20">20</option>
+              <option [value]="50">50</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    </aside>
+  </section>
+
+  <ng-template #filteredEmptyState>
+    <div class="empty-state-shell">
+      <p class="empty-state">Aucun produit disponible pour les filtres selectionnes.</p>
+    </div>
+  </ng-template>
 
   <ng-template #emptyState>
     <div class="empty-state-shell" *ngIf="!isLoading">
-      <p class="empty-state">Aucun produit disponible pour les filtres selectionnes.</p>
+      <p class="empty-state">Aucun produit disponible pour le moment.</p>
     </div>
   </ng-template>
 </section>
