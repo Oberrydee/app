@@ -1,0 +1,35 @@
+<section class="contact-page">
+  <div class="contact-shell">
+    <div class="contact-intro">
+      <p class="eyebrow">CONTACT</p>
+      <h1>Envoyez votre demande.</h1>
+      <p class="subtitle">
+        Remplissez votre email et votre message, puis cliquez sur Envoyer.
+      </p>
+    </div>
+
+    <div class="contact-card">
+      <p *ngIf="successMessage" class="feedback feedback--success">{{ successMessage }}</p>
+
+      <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="submit()">
+        <label class="field">
+          <span>Email</span>
+          <input type="email" formControlName="email" placeholder="vous@example.com">
+          <small *ngIf="hasError('email', 'required')">L'email est requis.</small>
+          <small *ngIf="hasError('email', 'email')">Saisissez un email valide.</small>
+        </label>
+
+        <label class="field">
+          <span>Message</span>
+          <textarea formControlName="message" rows="8" placeholder="Votre message"></textarea>
+          <small *ngIf="hasError('message', 'required')">Le message est requis.</small>
+          <small *ngIf="hasError('message', 'maxlength')">Le message doit contenir au maximum 300 caractères.</small>
+        </label>
+
+        <p class="counter">{{ contactForm.controls.message.value.length }}/300</p>
+
+        <button type="submit" class="submit-button">Envoyer</button>
+      </form>
+    </div>
+  </div>
+</section>

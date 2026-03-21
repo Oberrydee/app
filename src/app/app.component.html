@@ -1,1 +1,26 @@
-<router-outlet></router-outlet>
+<div class="app-shell" [class.app-shell--with-sidebar]="showSidebar">
+  <aside *ngIf="showSidebar" class="sidebar">
+    <div class="sidebar__head">
+      <p class="sidebar__eyebrow">Navigation</p>
+      <ng-container *ngIf="currentUser$ | async as currentUser">
+        <h1>{{ currentUser.firstName }} {{ currentUser.lastName }}</h1>
+        <p>{{ currentUser.email }}</p>
+      </ng-container>
+    </div>
+
+    <nav class="sidebar__nav" aria-label="Navigation principale">
+      <a routerLink="/home" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+      <a routerLink="/products-list" routerLinkActive="is-active">Produits</a>
+      <a routerLink="/cart" routerLinkActive="is-active">Panier</a>
+      <a routerLink="/wishlist" routerLinkActive="is-active">Wishlist</a>
+      <a routerLink="/contact" routerLinkActive="is-active">Contact</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/products-config" routerLinkActive="is-active">Configuration Produits</a>
+    </nav>
+
+    <button type="button" class="sidebar__logout" (click)="logout()">Déconnexion</button>
+  </aside>
+
+  <main class="app-content" [class.app-content--full]="!showSidebar">
+    <router-outlet></router-outlet>
+  </main>
+</div>

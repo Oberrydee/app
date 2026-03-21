@@ -8,6 +8,7 @@ import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { AdminGuard } from './modules/authentication-module/authentication/admin.guard';
 import { ProductsConfigComponent } from './pages/products-config/products-config.component';
 import { ProductsListComponent } from './pages/products-list/products-list.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
   { path: 'products-config', component: ProductsConfigComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'products-list', component: ProductsListComponent, canActivate: [AuthGuard] },
+  { path: 'contact', component: ContactComponent, canActivate: [AuthGuard] },
   { path: 'wishlist', component: WishlistComponent, canActivate: [AuthGuard] }
 ];
 

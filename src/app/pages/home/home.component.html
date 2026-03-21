@@ -6,32 +6,10 @@
       <ng-container *ngIf="currentUser$ | async as currentUser">
         <p class="subtitle">
           Vous êtes connecté {{ currentUser.firstName }} {{ currentUser.lastName }}.
-          Utilisez la navigation de l'application pour accéder
-          au panier, aux produits et à la wishlist.
+          Utilisez la barre latérale pour accéder au panier, aux produits,
+          à la wishlist et à la page de contact.
         </p>
       </ng-container>
-    </div>
-
-    <div class="actions">
-      <button type="button" class="button" (click)="logout()">
-        Déconnexion
-      </button>
-
-      <button *ngIf="isAdmin$ | async" type="button" class="button">
-        <a routerLink="/products-config">Gérer les produits</a>
-      </button>
-
-      <button type="button" class="button">
-        <a routerLink="/products-list">Voir les produits</a>
-      </button>
-
-      <button type="button" class="button">
-        <a routerLink="/cart">Voir le panier</a>
-      </button>
-
-      <button type="button" class="button">
-        <a routerLink="/wishlist">Voir la wishlist</a>
-      </button>
     </div>
   </div>
 </section>

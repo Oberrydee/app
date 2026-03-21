@@ -15,6 +15,7 @@ import { WishlistComponent } from './pages/wishlist/wishlist.component';
 import { ProductsListComponent } from './pages/products-list/products-list.component';
 import { ProductsConfigComponent } from './pages/products-config/products-config.component';
 import { PDialogComponent } from './shared/p-dialog/p-dialog.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { PDialogComponent } from './shared/p-dialog/p-dialog.component';
     RegisterComponent,
     ProductsListComponent,
     ProductsConfigComponent,
+    ContactComponent,
     PDialogComponent
   ],
   imports: [
