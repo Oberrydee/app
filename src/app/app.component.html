@@ -23,4 +23,57 @@
   <main class="app-content" [class.app-content--full]="!showSidebar">
     <router-outlet></router-outlet>
   </main>
+
+  <p-dialog
+    [visible]="adminSupportVisible"
+    (visibleChange)="onAdminSupportVisibleChange($event)"
+    [modal]="false"
+    [closable]="canDismissAdminSupport"
+    header="Support Admin"
+    styleClass="admin-support-dialog">
+    <div class="admin-support-panel" *ngIf="showSidebar">
+      <p *ngIf="adminSupportError" class="admin-support-feedback admin-support-feedback--error">{{ adminSupportError }}</p>
+      <p *ngIf="adminSupportSuccess" class="admin-support-feedback admin-support-feedback--success">{{ adminSupportSuccess }}</p>
+
+      <p *ngIf="adminSupportLoading" class="admin-support-text">Chargement du contact support...</p>
+
+      <ng-container *ngIf="!adminSupportLoading">
+        <p class="admin-support-text" *ngIf="!adminContactEmail; else existingSupportEmail">
+          Email de support non renseigne, veuillez le saisir dans le champ ci-dessous.
+        </p>
+
+        <ng-template #existingSupportEmail>
+          <p class="admin-support-text">
+            Email de support actuel : <strong>{{ adminContactEmail }}</strong>
+          </p>
+        </ng-template>
+
+        <form class="admin-support-form" [formGroup]="adminContactForm" (ngSubmit)="saveAdminContact()">
+          <label class="admin-support-field">
+            <span>Saisissez un email de support</span>
+            <input type="email" formControlName="email" placeholder="support@example.com">
+            <small *ngIf="hasAdminContactError('required')">L email est requis.</small>
+            <small *ngIf="hasAdminContactError('email')">Saisissez un email valide.</small>
+          </label>
+
+          <button type="submit" class="admin-support-button" [disabled]="adminSupportSaving">
+            {{ adminSupportSaving ? 'Enregistrement...' : 'Enregistrer' }}
+          </button>
+        </form>
+      </ng-container>
+    </div>
+  </p-dialog>
+
+  <button
+    *ngIf="showAdminSupportLauncher"
+    type="button"
+    class="admin-support-launcher"
+    (click)="openAdminSupport()"
+    title="Ouvrir le support admin"
+    aria-label="Ouvrir le support admin">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.25" />
+      <path d="M19.4 15A1 1 0 0 0 19.6 16.1L19.7 16.2A1 1 0 0 1 19.7 17.6L17.6 19.7A1 1 0 0 1 16.2 19.7L16.1 19.6A1 1 0 0 0 15 19.4A1 1 0 0 0 14.4 20.3V20.6A1 1 0 0 1 13.4 21.6H10.6A1 1 0 0 1 9.6 20.6V20.4A1 1 0 0 0 8.9 19.5A1 1 0 0 0 7.8 19.7L7.7 19.8A1 1 0 0 1 6.3 19.8L4.2 17.7A1 1 0 0 1 4.2 16.3L4.3 16.2A1 1 0 0 0 4.5 15.1A1 1 0 0 0 3.6 14.5H3.4A1 1 0 0 1 2.4 13.5V10.5A1 1 0 0 1 3.4 9.5H3.6A1 1 0 0 0 4.5 8.9A1 1 0 0 0 4.3 7.8L4.2 7.7A1 1 0 0 1 4.2 6.3L6.3 4.2A1 1 0 0 1 7.7 4.2L7.8 4.3A1 1 0 0 0 8.9 4.5H9A1 1 0 0 0 9.6 3.6V3.4A1 1 0 0 1 10.6 2.4H13.4A1 1 0 0 1 14.4 3.4V3.6A1 1 0 0 0 15 4.5A1 1 0 0 0 16.1 4.3L16.2 4.2A1 1 0 0 1 17.6 4.2L19.7 6.3A1 1 0 0 1 19.7 7.7L19.6 7.8A1 1 0 0 0 19.4 8.9V9A1 1 0 0 0 20.3 9.6H20.6A1 1 0 0 1 21.6 10.6V13.4A1 1 0 0 1 20.6 14.4H20.4A1 1 0 0 0 19.5 15Z" />
+    </svg>
+  </button>
 </div>

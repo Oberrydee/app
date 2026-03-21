@@ -1,11 +1,11 @@
 :host {
   display: block;
-  height: 98vh;
+  height: 100vh;
 }
 
-// .app-shell {
-//   height: 100%;
-// }
+.app-shell {
+  height: 100%;
+}
 
 .app-shell--with-sidebar {
   display: grid;
@@ -101,6 +101,137 @@
   height: 100%;
 }
 
+:host ::ng-deep .admin-support-dialog {
+  top: auto;
+  left: auto;
+  right: 20px;
+  bottom: 20px;
+  width: 20rem; 
+  height: 16rem;
+  transform: none;
+  border-radius: 22px;
+  box-shadow: 0 20px 46px rgba(15, 23, 42, 0.2);
+}
+
+:host ::ng-deep .admin-support-dialog .p-dialog-header {
+  padding: 18px 20px 0;
+}
+
+:host ::ng-deep .admin-support-dialog .p-dialog-header h2 {
+  font-size: 1.05rem;
+}
+
+:host ::ng-deep .admin-support-dialog .p-dialog-content {
+  padding: 16px 20px 20px;
+  overflow: auto;
+}
+
+.admin-support-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-support-text {
+  margin: 0;
+  color: #395168;
+  line-height: 1.5;
+}
+
+.admin-support-form {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-support-field {
+  display: grid;
+  gap: 8px;
+  color: #213448;
+  font-weight: 600;
+}
+
+.admin-support-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d4dbe5;
+  border-radius: 14px;
+  background: #f9fbfd;
+  color: #203247;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.admin-support-field input:focus {
+  outline: 2px solid rgba(35, 53, 74, 0.16);
+  border-color: #23354a;
+}
+
+.admin-support-field small {
+  color: #b42318;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.admin-support-button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: #13293d;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-support-button:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.admin-support-feedback {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+}
+
+.admin-support-feedback--error {
+  background: #fff0ef;
+  color: #b42318;
+}
+
+.admin-support-feedback--success {
+  background: #effcf6;
+  color: #067647;
+}
+
+.admin-support-launcher {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: #13293d;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 18px 34px rgba(19, 41, 61, 0.22);
+  cursor: pointer;
+  z-index: 1190;
+}
+
+.admin-support-launcher svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 @media (max-width: 900px) {
   .app-shell--with-sidebar {
     grid-template-columns: 1fr;
@@ -127,5 +258,18 @@
 
   .sidebar__nav {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  :host ::ng-deep .admin-support-dialog {
+    top: auto;
+    left: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(calc(100vw - 32px), 20rem);
+  }
+
+  .admin-support-launcher {
+    right: 16px;
+    bottom: 16px;
   }
 }

@@ -1,7 +1,7 @@
 <ng-container *ngIf="visible">
-  <div class="p-dialog-mask" (click)="onMaskClick()"></div>
+  <div *ngIf="modal" class="p-dialog-mask" (click)="onMaskClick()"></div>
 
-  <section class="p-dialog-panel" [ngClass]="styleClass" role="dialog" aria-modal="true">
+  <section class="p-dialog-panel" [ngClass]="styleClass" role="dialog" [attr.aria-modal]="modal ? 'true' : 'false'">
     <header class="p-dialog-header">
       <h2>{{ header }}</h2>
 
