@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, finalize } from 'rxjs';
 import { ProductResponse } from 'src/app/models/product.models';
 import { CartService } from 'src/app/modules/components/cart/cart.service';
 import { ProductService } from 'src/app/modules/components/product/product.service';
@@ -11,7 +11,7 @@ import { WishlistService } from 'src/app/modules/components/wishlist/wishlist.se
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.scss']
 })
-export class ProductsListComponent implements OnInit {
+export class ProductsListComponent implements OnInit, OnDestroy {
   products: ProductResponse[] = [];
   isLoading = false;
   pageError = '';
@@ -28,9 +28,12 @@ export class ProductsListComponent implements OnInit {
   cartCount$ = this.cartService.cartCount$;
   wishlistCount$ = this.wishlistService.wishlistCount$;
   wishlistProductIds = new Set<number>();
+  cartQuantities = new Map<number, number>();
   selectedCategories = new Set<string>();
   pendingProductId: number | null = null;
   pendingWishlistProductId: number | null = null;
+
+  private readonly subscriptions = new Subscription();
 
   constructor(
     private readonly productService: ProductService,
@@ -39,9 +42,19 @@ export class ProductsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.subscriptions.add(
+      this.cartService.cartItems$.subscribe((items) => {
+        this.cartQuantities = new Map(items.map((item) => [item.productId, item.quantity]));
+      })
+    );
+
     this.loadProducts();
     this.loadCart();
     this.loadWishlist();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   loadProducts(): void {
@@ -72,23 +85,24 @@ export class ProductsListComponent implements OnInit {
   }
 
   addToCart(product: ProductResponse): void {
-    this.pendingProductId = product.id;
-    this.cartFeedback = '';
-    this.wishlistFeedback = '';
-    this.pageError = '';
+    this.updateCartQuantity(product, this.getProductQuantity(product.id) + 1, `${product.name} a été ajouté au panier.`);
+  }
 
-    this.cartService.addProduct(product.id).pipe(
-      finalize(() => {
-        this.pendingProductId = null;
-      })
-    ).subscribe({
-      next: () => {
-        this.cartFeedback = `${product.name} a été ajouté au panier.`;
-      },
-      error: (error: HttpErrorResponse | Error) => {
-        this.pageError = 'Impossible d\'ajouter le produit au panier.\n ' + error.message;
-      }
-    });
+  increaseQuantity(product: ProductResponse): void {
+    this.updateCartQuantity(product, this.getProductQuantity(product.id) + 1);
+  }
+
+  decreaseQuantity(product: ProductResponse): void {
+    const nextQuantity = this.getProductQuantity(product.id) - 1;
+    this.updateCartQuantity(product, nextQuantity);
+  }
+
+  getProductQuantity(productId: number): number {
+    return this.cartQuantities.get(productId) ?? 0;
+  }
+
+  isQuantityUpdatePending(productId: number): boolean {
+    return this.pendingProductId === productId;
   }
 
   loadWishlist(): void {
@@ -229,6 +243,28 @@ export class ProductsListComponent implements OnInit {
 
   trackByProductId(_: number, product: ProductResponse): number {
     return product.id;
+  }
+
+  private updateCartQuantity(product: ProductResponse, quantity: number, successMessage = ''): void {
+    this.pendingProductId = product.id;
+    this.cartFeedback = '';
+    this.wishlistFeedback = '';
+    this.pageError = '';
+
+    this.cartService.setProductQuantity(product.id, quantity).pipe(
+      finalize(() => {
+        this.pendingProductId = null;
+      })
+    ).subscribe({
+      next: () => {
+        if (successMessage) {
+          this.cartFeedback = successMessage;
+        }
+      },
+      error: (error: HttpErrorResponse | Error) => {
+        this.pageError = 'Impossible de mettre à jour la quantité du produit.\n ' + error.message;
+      }
+    });
   }
 
   private initializeCatalogueControls(products: ProductResponse[]): void {

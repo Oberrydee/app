@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { CartProductItem } from 'src/app/models/cart.models';
+import { CartItemResponse, CartProductItem } from 'src/app/models/cart.models';
 import { ProductResponse } from 'src/app/models/product.models';
 import { CartService } from 'src/app/modules/components/cart/cart.service';
 import { ProductService } from 'src/app/modules/components/product/product.service';
@@ -16,6 +16,7 @@ export class CartComponent implements OnInit {
   cartItems: CartProductItem[] = [];
   isLoading = false;
   pageError = '';
+  pendingProductId: number | null = null;
 
   constructor(
     private readonly cartService: CartService,
@@ -50,29 +51,63 @@ export class CartComponent implements OnInit {
         this.cartItems = this.mapCartProducts(cartItems, products);
       },
       error: (error: HttpErrorResponse) => {
-        this.pageError = 'Impossible de charger le panier.\n '+error.message;
+        this.pageError = 'Impossible de charger le panier.\n ' + error.message;
       }
     });
   }
 
-  removeItem(item: CartProductItem): void {
-    this.pageError = '';
+  increaseQuantity(item: CartProductItem): void {
+    this.updateQuantity(item, item.quantity + 1);
+  }
 
-    this.cartService.removeItem(item.cartItemId).subscribe({
-      next: () => {
-        this.cartItems = this.cartItems.filter((cartItem) => cartItem.cartItemId !== item.cartItemId);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.pageError = 'Impossible de retirer le produit du panier.\n '+error.message;
-      }
-    });
+  decreaseQuantity(item: CartProductItem): void {
+    this.updateQuantity(item, item.quantity - 1);
+  }
+
+  removeItem(item: CartProductItem): void {
+    this.updateQuantity(item, 0);
+  }
+
+  isQuantityUpdatePending(productId: number): boolean {
+    return this.pendingProductId === productId;
   }
 
   trackByCartItemId(_: number, item: CartProductItem): number {
     return item.cartItemId;
   }
 
-  private mapCartProducts(cartItems: Array<{ id: number; productId: number; quantity: number }>, products: ProductResponse[]): CartProductItem[] {
+  private updateQuantity(item: CartProductItem, nextQuantity: number): void {
+    this.pageError = '';
+    this.pendingProductId = item.product.id;
+
+    this.cartService.setProductQuantity(item.product.id, nextQuantity).pipe(
+      finalize(() => {
+        this.pendingProductId = null;
+      })
+    ).subscribe({
+      next: (updatedItem) => {
+        if (!updatedItem) {
+          this.cartItems = this.cartItems.filter((cartItem) => cartItem.cartItemId !== item.cartItemId);
+          return;
+        }
+
+        this.cartItems = this.cartItems.map((cartItem) => (
+          cartItem.cartItemId === updatedItem.id
+            ? {
+                cartItemId: updatedItem.id,
+                quantity: updatedItem.quantity,
+                product: cartItem.product
+              }
+            : cartItem
+        ));
+      },
+      error: (error: HttpErrorResponse | Error) => {
+        this.pageError = 'Impossible de mettre à jour la quantité du produit.\n ' + error.message;
+      }
+    });
+  }
+
+  private mapCartProducts(cartItems: CartItemResponse[], products: ProductResponse[]): CartProductItem[] {
     return cartItems.reduce<CartProductItem[]>((items, cartItem) => {
       const product = products.find((entry) => entry.id === cartItem.productId);
       if (!product) {
@@ -88,6 +123,4 @@ export class CartComponent implements OnInit {
       return items;
     }, []);
   }
-
-
 }

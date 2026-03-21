@@ -48,33 +48,11 @@ export class CartService {
     }
 
     return this.fetchCartItems(cartId).pipe(
-      switchMap((items) => {
-        const existingItem = items.find((item) => item.productId === productId);
-
-        if (existingItem) {
-          return this.update(existingItem.id, {
-            cartId,
-            productId,
-            quantity: existingItem.quantity + 1
-          }).pipe(
-            tap((updatedItem) => {
-              this.cartItemsSubject.next(
-                items.map((item) => item.id === updatedItem.id ? updatedItem : item)
-              );
-            })
-          );
-        }
-
-        return this.create({
-          cartId,
-          productId,
-          quantity: 1
-        }).pipe(
-          tap((createdItem) => {
-            this.cartItemsSubject.next([createdItem, ...items]);
-          })
-        );
-      })
+      switchMap((items) => this.setProductQuantity(
+        productId,
+        (items.find((item) => item.productId === productId)?.quantity ?? 0) + 1
+      )),
+      switchMap((item) => item ? of(item) : throwError(() => new Error('Impossible d\'ajouter le produit au panier.')))
     );
   }
 
@@ -88,6 +66,58 @@ export class CartService {
     );
   }
 
+  setProductQuantity(productId: number, quantity: number): Observable<CartItemResponse | null> {
+    const cartId = this.getCurrentCartId();
+    if (!cartId) {
+      return throwError(() => new Error('Aucun panier utilisateur disponible.'));
+    }
+
+    return this.fetchCartItems(cartId).pipe(
+      switchMap((items) => {
+        const existingItem = items.find((item) => item.productId === productId);
+
+        if (quantity <= 0) {
+          if (!existingItem) {
+            this.cartItemsSubject.next(items);
+            return of(null);
+          }
+
+          return this.delete(existingItem.id).pipe(
+            map(() => null),
+            tap(() => {
+              this.cartItemsSubject.next(
+                items.filter((item) => item.id !== existingItem.id)
+              );
+            })
+          );
+        }
+
+        if (existingItem) {
+          return this.update(existingItem.id, {
+            cartId,
+            productId,
+            quantity
+          }).pipe(
+            tap((updatedItem) => {
+              this.cartItemsSubject.next(
+                items.map((item) => item.id === updatedItem.id ? updatedItem : item)
+              );
+            })
+          );
+        }
+
+        return this.create({
+          cartId,
+          productId,
+          quantity
+        }).pipe(
+          tap((createdItem) => {
+            this.cartItemsSubject.next([createdItem, ...items]);
+          })
+        );
+      })
+    );
+  }
   private fetchCartItems(cartId: number): Observable<CartItemResponse[]> {
     return this.http.get<CartItemResponse[]>(this.cartUrl).pipe(
       map((items) => items.filter((item) => item.cartId === cartId))

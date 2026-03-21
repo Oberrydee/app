@@ -47,12 +47,34 @@
           <p class="product-code">{{ item.product.code }}</p>
           <h2>{{ item.product.name }}</h2>
           <p class="product-meta">{{ item.product.category }}</p>
-          <p class="product-meta">Quantité : {{ item.quantity }}</p>
           <p class="product-price">{{ item.product.price | number:'1.2-2' }} EUR</p>
           <p class="product-meta">Sous-total : {{ item.product.price * item.quantity | number:'1.2-2' }} EUR</p>
+
+          <div class="quantity-block">
+            <span class="quantity-label">Quantité</span>
+            <div class="quantity-stepper">
+              <button
+                type="button"
+                class="quantity-button"
+                [disabled]="isQuantityUpdatePending(item.product.id)"
+                (click)="decreaseQuantity(item)"
+                aria-label="Diminuer la quantité">
+                -
+              </button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button
+                type="button"
+                class="quantity-button"
+                [disabled]="isQuantityUpdatePending(item.product.id)"
+                (click)="increaseQuantity(item)"
+                aria-label="Augmenter la quantité">
+                +
+              </button>
+            </div>
+          </div>
         </div>
 
-        <button type="button" class="remove-button" (click)="removeItem(item)">
+        <button type="button" class="remove-button" [disabled]="isQuantityUpdatePending(item.product.id)" (click)="removeItem(item)">
           Retirer
         </button>
       </article>

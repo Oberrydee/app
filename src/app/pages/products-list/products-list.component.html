@@ -99,6 +99,29 @@
             <p class="product-meta">{{ product.category }}</p>
             <p class="product-price">{{ product.price | number:'1.2-2' }} EUR</p>
             <p class="product-meta">Ref: {{ product.internalReference }}</p>
+
+            <div class="quantity-block">
+              <span class="quantity-label">Quantité dans le panier</span>
+              <div class="quantity-stepper">
+                <button
+                  type="button"
+                  class="quantity-button"
+                  [disabled]="getProductQuantity(product.id) === 0 || isQuantityUpdatePending(product.id)"
+                  (click)="decreaseQuantity(product)"
+                  aria-label="Diminuer la quantité">
+                  -
+                </button>
+                <span class="quantity-value">{{ getProductQuantity(product.id) }}</span>
+                <button
+                  type="button"
+                  class="quantity-button"
+                  [disabled]="isQuantityUpdatePending(product.id)"
+                  (click)="increaseQuantity(product)"
+                  aria-label="Augmenter la quantité">
+                  +
+                </button>
+              </div>
+            </div>
           </div>
         </article>
       </div>
