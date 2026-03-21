@@ -1,5 +1,5 @@
 <section class="products-config-page">
-  <a class="home-button" routerLink="/home" aria-label="Retour a l accueil" title="Retour Accueil">
+  <a class="home-button" routerLink="/home" aria-label="Retour à l'accueil" title="Retour Accueil">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M3 10.5L12 3L21 10.5" />
       <path d="M5.5 9.5V21H18.5V9.5" />
@@ -9,7 +9,7 @@
 
   <div class="topbar">
     <div class="topbar-pills">
-      <div class="pill-button">Produits: {{ products.length }}</div>
+      <div class="pill-button">Produits : {{ products.length }}</div>
       <div class="pill-button pill-button--solid">
         {{ selectedProduct ? selectedProduct.name : 'Aucune sélection' }}
       </div>
@@ -78,7 +78,7 @@
 
         <ng-template #imageFallback>
           <div class="product-image-placeholder">
-            No image
+            Aucune image
           </div>
         </ng-template>
       </div>
@@ -107,13 +107,13 @@
           <span>Nouveau produit</span>
         </div>
       </article>
-      <p class="empty-state">Aucun produit trouve. Utilisez la carte Nouveau produit pour en ajouter un.</p>
+      <p class="empty-state">Aucun produit trouvé. Utilisez la carte Nouveau produit pour en ajouter un.</p>
     </div>
   </ng-template>
 
   <p-dialog
     [(visible)]="isDialogVisible"
-    [header]="dialogMode === 'create' ? 'Creer un produit' : 'Modifier le produit'"
+    [header]="dialogMode === 'create' ? 'Créer un produit' : 'Modifier le produit'"
     [modal]="true"
     [closable]="true"
     styleClass="product-dialog">
@@ -143,15 +143,15 @@
           <strong *ngIf="selectedImageName" class="file-name">{{ selectedImageName }}</strong>
           <small *ngIf="dialogMode === 'edit'">Le backend exige une image pour chaque modification.</small>
           <small *ngIf="productForm.controls.imageFile.touched && productForm.controls.imageFile.hasError('required')">
-            L image est requise.
+            L'image est requise.
           </small>
         </label>
 
         <label class="field">
-          <span>Categorie</span>
+          <span>Catégorie</span>
           <input type="text" formControlName="category">
           <small *ngIf="productForm.controls.category.touched && productForm.controls.category.hasError('required')">
-            La categorie est requise.
+            La catégorie est requise.
           </small>
         </label>
 
@@ -164,10 +164,10 @@
         </label>
 
         <label class="field field--full">
-          <span>Internal reference</span>
+          <span>Référence interne</span>
           <input type="text" formControlName="internalReference">
           <small *ngIf="productForm.controls.internalReference.touched && productForm.controls.internalReference.hasError('required')">
-            L internal reference est requise.
+            La référence interne est requise.
           </small>
         </label>
       </div>
@@ -177,7 +177,7 @@
           Annuler
         </button>
         <button type="submit" class="primary-button" [disabled]="isSaving">
-          {{ isSaving ? 'Enregistrement...' : (dialogMode === 'create' ? 'Creer' : 'Modifier') }}
+          {{ isSaving ? 'Enregistrement...' : (dialogMode === 'create' ? 'Créer' : 'Modifier') }}
         </button>
       </div>
     </form>

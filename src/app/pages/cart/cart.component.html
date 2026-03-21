@@ -1,5 +1,5 @@
 <section class="cart-page">
-  <a class="home-button" routerLink="/home" aria-label="Retour a l accueil" title="Retour Accueil">
+  <a class="home-button" routerLink="/home" aria-label="Retour à l'accueil" title="Retour Accueil">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M3 10.5L12 3L21 10.5" />
       <path d="M5.5 9.5V21H18.5V9.5" />
@@ -39,7 +39,7 @@
             [alt]="item.product.name">
 
           <ng-template #imageFallback>
-            <div class="product-image-placeholder">No image</div>
+            <div class="product-image-placeholder">Aucune image</div>
           </ng-template>
         </div>
 
@@ -47,9 +47,9 @@
           <p class="product-code">{{ item.product.code }}</p>
           <h2>{{ item.product.name }}</h2>
           <p class="product-meta">{{ item.product.category }}</p>
-          <p class="product-meta">Quantite: {{ item.quantity }}</p>
+          <p class="product-meta">Quantité : {{ item.quantity }}</p>
           <p class="product-price">{{ item.product.price | number:'1.2-2' }} EUR</p>
-          <p class="product-meta">Sous-total: {{ item.product.price * item.quantity | number:'1.2-2' }} EUR</p>
+          <p class="product-meta">Sous-total : {{ item.product.price * item.quantity | number:'1.2-2' }} EUR</p>
         </div>
 
         <button type="button" class="remove-button" (click)="removeItem(item)">

@@ -1,5 +1,5 @@
 <section class="products-list-page">
-  <a class="home-button" routerLink="/home" aria-label="Retour a l accueil" title="Retour Accueil">
+  <a class="home-button" routerLink="/home" aria-label="Retour à l'accueil" title="Retour Accueil">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M3 10.5L12 3L21 10.5" />
       <path d="M5.5 9.5V21H18.5V9.5" />
@@ -46,7 +46,7 @@
   <section class="catalogue-layout" *ngIf="!isLoading && products.length > 0; else emptyState">
     <div class="catalogue-main">
       <div class="catalogue-meta">
-        <p>{{ sortedProducts.length }} produit(s) trouve(s)</p>
+        <p>{{ sortedProducts.length }} produit(s) trouvé(s)</p>
         <p>Page {{ safeCurrentPage }} / {{ totalPages }}</p>
       </div>
 
@@ -61,7 +61,7 @@
               [class.card-action-button--wishlist-active]="isInWishlist(product.id)"
               [disabled]="pendingWishlistProductId === product.id"
               (click)="toggleWishlist(product)"
-              aria-label="Ajouter a la wishlist">
+              aria-label="Ajouter à la wishlist">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 20.5L4.8 13.6C2.6 11.5 2.4 8 4.4 5.8C6.2 3.8 9.4 3.5 11.5 5.1L12 5.5L12.5 5.1C14.6 3.5 17.8 3.8 19.6 5.8C21.6 8 21.4 11.5 19.2 13.6L12 20.5Z" />
               </svg>
@@ -89,7 +89,7 @@
               [alt]="product.name">
 
             <ng-template #imageFallback>
-              <div class="product-image-placeholder">No image</div>
+              <div class="product-image-placeholder">Aucune image</div>
             </ng-template>
           </div>
 
@@ -104,7 +104,7 @@
       </div>
 
       <div class="pagination" *ngIf="sortedProducts.length > 0">
-        <button type="button" class="pagination-button" [disabled]="safeCurrentPage === 1" (click)="previousPage()">Precedent</button>
+        <button type="button" class="pagination-button" [disabled]="safeCurrentPage === 1" (click)="previousPage()">Précédent</button>
 
         <button
           *ngFor="let page of pageNumbers"
@@ -122,9 +122,9 @@
     <aside class="catalogue-sidebar">
       <section class="catalogue-controls">
         <div class="control-group control-group--dropdown">
-          <span class="control-label">Categories</span>
+          <span class="control-label">Catégories</span>
           <button type="button" class="dropdown-toggle" (click)="toggleCategoryDropdown()">
-            <span>{{ selectedCategories.size > 0 ? selectedCategories.size + ' selection(s)' : 'Toutes les categories' }}</span>
+            <span>{{ selectedCategories.size > 0 ? selectedCategories.size + ' sélection(s)' : 'Toutes les catégories' }}</span>
             <span class="dropdown-toggle__arrow">{{ categoryDropdownOpen ? '▲' : '▼' }}</span>
           </button>
 
@@ -164,9 +164,9 @@
             <span class="control-label">Tri</span>
             <select [value]="sortOption" (change)="setSortOption($any($event.target).value)">
               <option value="priceAsc">Prix croissant</option>
-              <option value="priceDesc">Prix decroissant</option>
-              <option value="createdAtAsc">Date d ajout croissante</option>
-              <option value="createdAtDesc">Date d ajout decroissante</option>
+              <option value="priceDesc">Prix décroissant</option>
+              <option value="createdAtAsc">Date d'ajout croissante</option>
+              <option value="createdAtDesc">Date d'ajout décroissante</option>
             </select>
           </label>
         </div>
@@ -188,7 +188,7 @@
 
   <ng-template #filteredEmptyState>
     <div class="empty-state-shell">
-      <p class="empty-state">Aucun produit disponible pour les filtres selectionnes.</p>
+      <p class="empty-state">Aucun produit disponible pour les filtres sélectionnés.</p>
     </div>
   </ng-template>
 

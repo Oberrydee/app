@@ -22,7 +22,7 @@ export class ContactComponent {
       return;
     }
 
-    this.successMessage = 'Demande de contact envoyee avec succes.';
+    this.successMessage = 'Demande de contact envoyée avec succès.';
     this.contactForm.reset({
       email: '',
       message: ''

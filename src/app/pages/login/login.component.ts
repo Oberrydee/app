@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        this.errorMessage = "La session n'a pas pu etre initialisee.";
+        this.errorMessage = "La session n'a pas pu être initialisée.";
       },
       error: (error: HttpErrorResponse) => {
         this.errorMessage = this.extractErrorMessage(error);
@@ -119,7 +119,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         this.authenticationService.logout();
         this.mode = 'login';
-        this.successMessage = 'Compte cree. Connectez-vous pour continuer.';
+        this.successMessage = 'Compte créé. Connectez-vous pour continuer.';
         this.loginForm.patchValue({
           email: payload.email,
           password: ''
@@ -164,6 +164,6 @@ export class LoginComponent implements OnInit {
       }
     }
 
-    return 'Une erreur est survenue. Reessayez.';
+    return 'Une erreur est survenue. Réessayez.';
   }
 }

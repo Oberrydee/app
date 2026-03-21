@@ -109,12 +109,12 @@ export class AppComponent {
     ).subscribe({
       next: (adminContact) => {
         this.applyAdminContact(adminContact);
-        this.adminSupportSuccess = 'Email de support mis a jour.';
+        this.adminSupportSuccess = 'Email de support mis à jour.';
         this.adminSupportDismissed = false;
         this.adminSupportVisible = true;
       },
       error: (error: HttpErrorResponse) => {
-        this.adminSupportError = error.error?.message || 'Impossible de mettre a jour l\'email de support.';
+        this.adminSupportError = error.error?.message || 'Impossible de mettre à jour l\'email de support.';
       }
     });
   }
@@ -141,7 +141,7 @@ export class AppComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.adminSupportVisible = !this.currentUrl.startsWith('/login') && !this.adminSupportDismissed;
-        this.adminSupportError = error.error?.message || 'Impossible de charger les informations de contact de support.';
+        this.adminSupportError = error.error?.message || 'Impossible de charger les informations de contact du support.';
       }
     });
   }

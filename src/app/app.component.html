@@ -14,7 +14,7 @@
       <a routerLink="/cart" routerLinkActive="is-active">Panier</a>
       <a routerLink="/wishlist" routerLinkActive="is-active">Wishlist</a>
       <a routerLink="/contact" routerLinkActive="is-active">Contact</a>
-      <a *ngIf="isAdmin$ | async" routerLink="/products-config" routerLinkActive="is-active">Configuration Produits</a>
+      <a *ngIf="isAdmin$ | async" routerLink="/products-config" routerLinkActive="is-active">Configuration produits</a>
     </nav>
 
     <button type="button" class="sidebar__logout" (click)="logout()">Déconnexion</button>
@@ -39,7 +39,7 @@
 
       <ng-container *ngIf="!adminSupportLoading">
         <p class="admin-support-text" *ngIf="!adminContactEmail; else existingSupportEmail">
-          Email de support non renseigne, veuillez le saisir dans le champ ci-dessous.
+          Email de support non renseigné, veuillez le saisir dans le champ ci-dessous.
         </p>
 
         <ng-template #existingSupportEmail>
@@ -52,7 +52,7 @@
           <label class="admin-support-field">
             <span>Saisissez un email de support</span>
             <input type="email" formControlName="email" placeholder="support@example.com">
-            <small *ngIf="hasAdminContactError('required')">L email est requis.</small>
+            <small *ngIf="hasAdminContactError('required')">L'email est requis.</small>
             <small *ngIf="hasAdminContactError('email')">Saisissez un email valide.</small>
           </label>
 

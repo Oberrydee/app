@@ -58,7 +58,7 @@ export class ProductsListComponent implements OnInit {
         this.initializeCatalogueControls(products);
       },
       error: (error: HttpErrorResponse) => {
-        this.pageError = 'Impossible de charger le catalogue.\n '+error.message;
+        this.pageError = 'Impossible de charger le catalogue.\n ' + error.message;
       }
     });
   }
@@ -66,7 +66,7 @@ export class ProductsListComponent implements OnInit {
   loadCart(): void {
     this.cartService.loadCurrentUserCart().subscribe({
       error: (error: HttpErrorResponse | Error) => {
-        this.pageError = 'Impossible de charger le panier.\n '+error.message;
+        this.pageError = 'Impossible de charger le panier.\n ' + error.message;
       }
     });
   }
@@ -86,7 +86,7 @@ export class ProductsListComponent implements OnInit {
         this.cartFeedback = `${product.name} a été ajouté au panier.`;
       },
       error: (error: HttpErrorResponse | Error) => {
-        this.pageError = 'Impossible d\'ajouter le produit au panier.\n '+error.message;
+        this.pageError = 'Impossible d\'ajouter le produit au panier.\n ' + error.message;
       }
     });
   }
@@ -260,5 +260,4 @@ export class ProductsListComponent implements OnInit {
   private resetPagination(): void {
     this.currentPage = 1;
   }
-
 }
