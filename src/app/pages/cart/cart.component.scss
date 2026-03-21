@@ -128,11 +128,13 @@
 
 .cart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: 28px;
+  justify-content: start;
 }
 
 .cart-card {
+  width: 10rem;
   padding: 20px;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.94);
@@ -300,5 +302,9 @@
 
   .topbar {
     flex-direction: column;
+  }
+
+  .cart-grid {
+    justify-content: center;
   }
 }
