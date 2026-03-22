@@ -13,4 +13,6 @@ Ouvrez ensuite :
 http://localhost:4200/
 ```
 
-Pre-requis : [Node.js](https://nodejs.org/) doit etre installe sur la machine.
+Pre-requis : [Node.js](https://nodejs.org/) Version 16 doit etre installé sur la machine.
+
+erreur potentielle: "Node.js version v14.21.3 detected. The Angular CLI requires a minimum of v16.X.X" => utiliser les commandes "nvm install 16.20.2" puis "nvm use 16.20.2"
