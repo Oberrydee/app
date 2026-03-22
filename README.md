@@ -1,5 +1,23 @@
 # Frontend e-commerce Angular
 
+## Résumé du projet
+
+Cette application est l'interface métier d'un mini site e-commerce.
+
+Elle permet à un utilisateur authentifié de :
+
+- consulter le catalogue produits
+- gérer son panier
+- gérer sa wishlist
+- contacter le support
+
+Elle permet également à un administrateur de :
+
+- accéder à un écran de configuration des produits
+- gérer l'adresse email de support client via une popup dédiée
+
+Le frontend consomme une API backend pour l'authentification, la récupération des données et les actions de gestion (produits, contact support, etc.).
+
 ## Procédure
 
 1. Installez Git : [https://git-scm.com/download/win](https://git-scm.com/download/win)
