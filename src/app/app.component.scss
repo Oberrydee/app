@@ -9,7 +9,7 @@
 
 .app-shell--with-sidebar {
   display: grid;
-  grid-template-columns: 10rem minmax(0, 1fr);
+  grid-template-columns: 15rem minmax(0, 1fr);
   height: 100%;
   background: #edf3f8;
   overflow: hidden;
@@ -17,7 +17,7 @@
 
 .sidebar {
   height: 100%;
-  width: 10rem;
+  width: 15rem;
   box-sizing: border-box;
   padding: 28px 20px 24px;
   background: linear-gradient(180deg, #162a3c 0%, #0f1d2b 100%);
@@ -107,8 +107,8 @@
   left: auto;
   right: 20px;
   bottom: 20px;
-  width: 20rem; 
-  height: 16rem;
+  width: 20rem;
+  min-height: 16rem;
   transform: none;
   border-radius: 22px;
   box-shadow: 0 20px 46px rgba(15, 23, 42, 0.2);
